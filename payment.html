@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מסלולי תשלום - מחשבון מיסי רכב</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .payment-plans {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+        }
+        .plan-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            width: 250px;
+            text-align: center;
+        }
+        .plan-title {
+            color: #1a237e;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        .plan-price {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .plan-price small {
+            font-size: 16px;
+            color: #666;
+        }
+        .plan-features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+        }
+        .plan-features li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+        .select-plan {
+            background-color: #1a237e;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        .select-plan:hover {
+            background-color: #0e1642;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>מסלולי תשלום</h1>
+    </div>
+
+    <div class="main-container">
+        <div class="payment-plans">
+            <div class="plan-card">
+                <div class="plan-title">מסלול חודשי</div>
+                <div class="plan-price">₪200 <small>לחודש</small></div>
+                <ul class="plan-features">
+                    <li>גישה מלאה למחשבון</li>
+                    <li>תמיכה במייל</li>
+                    <li>עדכונים שוטפים</li>
+                    <li>ביטול בכל עת</li>
+                </ul>
+                <button class="select-plan" onclick="selectPlan('monthly')">בחר מסלול</button>
+            </div>
+
+            <div class="plan-card">
+                <div class="plan-title">מסלול רבע שנתי</div>
+                <div class="plan-price">₪165 <small>לחודש</small></div>
+                <div class="plan-savings">חיסכון של ₪105</div>
+                <ul class="plan-features">
+                    <li>גישה מלאה למחשבון</li>
+                    <li>תמיכה במייל</li>
+                    <li>עדכונים שוטפים</li>
+                    <li>ביטול בכל עת</li>
+                </ul>
+                <button class="select-plan" onclick="selectPlan('quarterly')">בחר מסלול</button>
+            </div>
+
+            <div class="plan-card">
+                <div class="plan-title">מסלול שנתי</div>
+                <div class="plan-price">₪135 <small>לחודש</small></div>
+                <div class="plan-savings">חיסכון של ₪780</div>
+                <ul class="plan-features">
+                    <li>גישה מלאה למחשבון</li>
+                    <li>תמיכה במייל</li>
+                    <li>עדכונים שוטפים</li>
+                    <li>ביטול בכל עת</li>
+                </ul>
+                <button class="select-plan" onclick="selectPlan('yearly')">בחר מסלול</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function selectPlan(planType) {
+            // כאן יש להוסיף את הלוגיקה לטיפול בבחירת המסלול
+            console.log('נבחר מסלול:', planType);
+            // מעבר לדף התשלום
+            window.location.href = 'payment-process.html';
+        }
+    </script>
+</body>
+</html> 

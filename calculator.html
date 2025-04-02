@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>חישוב מיסי רכב</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        label {
+            font-weight: normal;
+        }
+        input[type="number"], input[type="text"] {
+            width: 100px;
+            padding: 5px;
+            text-align: left;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .radio-group {
+            display: flex;
+            gap: 20px;
+        }
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .result-box {
+            background-color: #f0f7ff;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .result-box h3 {
+            margin: 0;
+            color: #333;
+        }
+        .result-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #000;
+            margin: 10px 0;
+        }
+        .note {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .required {
+            color: red;
+        }
+        .form-group label {
+            flex: 1;
+            margin-left: 10px;
+        }
+        .form-group input[type="number"],
+        .form-group input[type="text"] {
+            width: 150px;
+            text-align: center;
+        }
+        .radio-group {
+            width: 150px;
+            justify-content: flex-start;
+        }
+        .back-button {
+            background-color: #1a237e;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .back-button:hover {
+            background-color: #0e1642;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-button">חזרה לדף הראשי</a>
+    
+    <div class="form-container">
+        <h2>נתוני חישוב</h2>
+        <form id="taxCalculatorForm">
+            <div class="form-group">
+                <label for="invoiceAmount">1. סך חשבון במטח</label>
+                <input type="number" id="invoiceAmount" value="50000">
+            </div>
+
+            <div class="form-group">
+                <label for="currency">2. סוג מטח</label>
+                <input type="text" id="currency" value="USD" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="exchangeRate">3. שער המרת מטח</label>
+                <input type="number" id="exchangeRate" value="4" step="0.01">
+            </div>
+
+            <div class="form-group">
+                <label for="shippingCost">4. ערך הובלה במטח</label>
+                <input type="number" id="shippingCost" value="2000">
+            </div>
+
+            <div class="form-group">
+                <label for="localExpenses">5. ערך הוצאות מקומיות בשקלים</label>
+                <input type="number" id="localExpenses" value="3500">
+            </div>
+
+            <div class="form-group">
+                <label>6. האם יש הצהרת מקור או תעודת מקור או קיום תנאים לקוד 815?</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="hasOriginYes" name="hasOrigin" value="כן">
+                        <label for="hasOriginYes">כן</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="hasOriginNo" name="hasOrigin" value="לא" checked>
+                        <label for="hasOriginNo">לא</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>7. האם המשקל מעל 3500 ק"ג?</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="weight3500Yes" name="weight3500" value="כן">
+                        <label for="weight3500Yes">כן</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="weight3500No" name="weight3500" value="לא" checked>
+                        <label for="weight3500No">לא</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>8. האם המשקל מעל 4500 ק"ג?</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="weight4500Yes" name="weight4500" value="כן">
+                        <label for="weight4500Yes">כן</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="weight4500No" name="weight4500" value="לא" checked>
+                        <label for="weight4500No">לא</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>9. האם המחיר לצרכן עולה על 300,000 ש"ח? <span class="required">*</span></label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="priceAbove300kYes" name="priceAbove300k" value="כן" checked>
+                        <label for="priceAbove300kYes">כן</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="priceAbove300kNo" name="priceAbove300k" value="לא">
+                        <label for="priceAbove300kNo">לא</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-box">
+                <h3>המחיר לצרכן משוער:</h3>
+                <div class="result-value">₪ 339,727</div>
+                <div class="note">זהו המחיר המשוער לצרכן לפי התנאים שהוזנו</div>
+            </div>
+
+            <div class="form-group">
+                <label for="consumerPrice">10. מחיר לצרכן (בש"ח)</label>
+                <input type="number" id="consumerPrice" value="0">
+            </div>
+
+            <div class="note">יש לתקן את המחיר לצרכן לאחר חישוב עם יוקרה</div>
+        </form>
+    </div>
+
+    <script>
+        // פונקציות החישוב
+        function calculateCustomsValue(invoiceAmount, shippingCost, exchangeRate, localExpenses) {
+            return (parseFloat(invoiceAmount) + parseFloat(shippingCost)) * parseFloat(exchangeRate) + parseFloat(localExpenses);
+        }
+
+        function calculateCustomsDuty(customsValue, hasOriginDeclaration) {
+            if (hasOriginDeclaration === 'כן') {
+                return 0;
+            }
+            return 0; // לרכב חשמלי
+        }
+
+        function calculatePurchaseTaxValue(customsValue, customsDuty) {
+            return customsValue + customsDuty;
+        }
+
+        function calculateLuxuryTaxRate(consumerPrice) {
+            if (consumerPrice <= 300000) {
+                return 0;
+            }
+            return ((consumerPrice - 300000) / consumerPrice) * 0.2;
+        }
+
+        function calculatePurchaseTax(purchaseTaxValue, weightAbove3500, weightAbove4500, luxuryTaxRate = 0) {
+            if (weightAbove4500 === 'כן') {
+                return 0;
+            }
+            
+            if (weightAbove3500 === 'כן') {
+                return purchaseTaxValue * 0.1;
+            }
+            
+            return purchaseTaxValue * (0.1 + luxuryTaxRate);
+        }
+
+        function calculateVAT(purchaseTaxValue, customsDuty, purchaseTax) {
+            return (purchaseTaxValue + customsDuty + purchaseTax) * 0.18;
+        }
+
+        function calculateEstimatedConsumerPrice(customsValue, customsDuty, purchaseTax) {
+            const baseValue = customsValue + customsDuty + purchaseTax;
+            const withVAT = baseValue * 1.18;
+            const additionalRate = 0.2 + (0.0125 * 0); // נניח 0 חודשים
+            return withVAT * (1 + additionalRate);
+        }
+
+        function updateCalculation() {
+            const invoiceAmount = document.getElementById('invoiceAmount').value;
+            const exchangeRate = document.getElementById('exchangeRate').value;
+            const shippingCost = document.getElementById('shippingCost').value;
+            const localExpenses = document.getElementById('localExpenses').value;
+            const hasOriginDeclaration = document.querySelector('input[name="hasOrigin"]:checked').value;
+            const weightAbove3500 = document.querySelector('input[name="weight3500"]:checked').value;
+            const weightAbove4500 = document.querySelector('input[name="weight4500"]:checked').value;
+            const priceAbove300k = document.querySelector('input[name="priceAbove300k"]:checked').value;
+
+            const customsValue = calculateCustomsValue(invoiceAmount, shippingCost, exchangeRate, localExpenses);
+            const customsDuty = calculateCustomsDuty(customsValue, hasOriginDeclaration);
+            const purchaseTaxValue = calculatePurchaseTaxValue(customsValue, customsDuty);
+            const luxuryTaxRate = priceAbove300k === 'כן' ? 0.0859 : 0;
+            const purchaseTax = calculatePurchaseTax(purchaseTaxValue, weightAbove3500, weightAbove4500, luxuryTaxRate);
+            const estimatedConsumerPrice = calculateEstimatedConsumerPrice(customsValue, customsDuty, purchaseTax);
+
+            document.querySelector('.result-value').textContent = '₪ ' + Math.round(estimatedConsumerPrice).toLocaleString();
+        }
+
+        // הוספת מאזיני אירועים לכל השדות
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('change', updateCalculation);
+            input.addEventListener('input', updateCalculation);
+        });
+
+        // הפעלת החישוב הראשוני
+        updateCalculation();
+    </script>
+</body>
+</html> 

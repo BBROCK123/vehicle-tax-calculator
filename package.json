@@ -1,0 +1,12 @@
+{
+  "name": "vehicle-tax-calculator",
+  "version": "1.0.0",
+  "description": "מחשבון מיסי רכב",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC"
+} 

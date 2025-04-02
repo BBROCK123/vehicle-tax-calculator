@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מחשבון מיסי רכב</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #1a237e;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .nav {
+            background-color: white;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .nav-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .nav-item.active {
+            border-bottom: 2px solid #1a237e;
+        }
+        .main-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .auth-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .btn {
+            background-color: #1a237e;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        .btn:hover {
+            background-color: #0e1642;
+        }
+        .steps-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+        .step-item {
+            flex: 1;
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            margin: 0 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .step-item:hover {
+            transform: translateY(-5px);
+        }
+        .step-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        .step-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .step-description {
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>מחשבון מיסי רכב</h1>
+    </div>
+
+    <nav class="nav">
+        <ul class="nav-list">
+            <li class="nav-item active" onclick="showSection('auth')">התחברות</li>
+            <li class="nav-item" onclick="showSection('payment')">מסלול תשלום</li>
+            <li class="nav-item" onclick="showSection('import-type')">סוג יבוא</li>
+            <li class="nav-item" onclick="showSection('calculator-type')">סוג מחשבון</li>
+            <li class="nav-item" onclick="showSection('data')">הזנת נתונים</li>
+            <li class="nav-item" onclick="showSection('results')">תוצאות</li>
+        </ul>
+    </nav>
+
+    <div class="main-container">
+        <!-- מסך התחברות -->
+        <div id="auth-section" class="auth-container">
+            <h2>התחברות למערכת</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="email">דואר אלקטרוני</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">סיסמה</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="btn">התחבר</button>
+                <p style="text-align: center; margin-top: 20px;">
+                    אין לך חשבון? <a href="#" onclick="showRegistration()">הירשם עכשיו</a>
+                </p>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="payment.html" class="btn" style="display: inline-block; text-decoration: none;">צפה במסלולי תשלום</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- מסך בחירת מסלול -->
+        <div id="steps-section" class="steps-container" style="display: none;">
+            <div class="step-item" onclick="selectImportType('personal')">
+                <div class="step-icon">🚗</div>
+                <div class="step-title">יבוא אישי</div>
+                <div class="step-description">חישוב מיסים ליבוא אישי של רכב</div>
+            </div>
+            <div class="step-item" onclick="selectImportType('commercial')">
+                <div class="step-icon">🚛</div>
+                <div class="step-title">יבוא מסחרי</div>
+                <div class="step-description">חישוב מיסים ליבוא מסחרי</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSection = 'auth';
+        let userType = null;
+
+        function showSection(section) {
+            // הסרת active מכל הפריטים
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // הוספת active לפריט הנבחר
+            const selectedItem = document.querySelector(`.nav-item[onclick="showSection('${section}')"]`);
+            if (selectedItem) {
+                selectedItem.classList.add('active');
+            }
+            
+            // הסתרת כל המסכים
+            document.getElementById('auth-section').style.display = 'none';
+            document.getElementById('steps-section').style.display = 'none';
+
+            // הצגת המסך הרלוונטי
+            switch(section) {
+                case 'auth':
+                    document.getElementById('auth-section').style.display = 'block';
+                    break;
+                case 'import-type':
+                    document.getElementById('steps-section').style.display = 'flex';
+                    break;
+            }
+
+            currentSection = section;
+        }
+
+        function showRegistration() {
+            window.location.href = 'register.html';
+        }
+
+        function selectImportType(type) {
+            userType = type;
+            // מעבר לדף בחירת סוג החישוב
+            window.location.href = 'calculator-type.html';
+        }
+
+        // טיפול בטופס התחברות
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // כאן נוסיף את הלוגיקה לטיפול בהתחברות
+            console.log('התחברות עם:', email, password);
+            // מעבר לבחירת סוג יבוא
+            showSection('import-type');
+        });
+    </script>
+</body>
+</html> 
