@@ -204,8 +204,8 @@
 
         function selectImportType(type) {
             userType = type;
-            // מעבר לדף בחירת סוג החישוב
-            window.location.href = 'calculator-type.html';
+            // מעבר לדף בחירת סוג החישוב עם פרמטר סוג היבוא
+            window.location.href = `calculator-type.html?type=${type}`;
         }
 
         // טיפול בטופס התחברות
