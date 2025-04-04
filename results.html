@@ -3,49 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>תוצאות חישוב - מחשבון מיסי רכב</title>
+    <title>תוצאות חישוב מיסי רכב</title>
     <link rel="stylesheet" href="styles.css">
     <style>
         .results-container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-        }
-        .result-card {
             background-color: white;
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .result-title {
-            color: #1a237e;
-            margin-bottom: 15px;
-            font-size: 20px;
-            font-weight: bold;
+        .results-title {
             text-align: center;
+            color: #1a237e;
+            margin-bottom: 30px;
+            font-size: 24px;
         }
         .result-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            padding: 5px;
+            padding: 15px 0;
             border-bottom: 1px solid #eee;
         }
         .result-item:last-child {
             border-bottom: none;
         }
         .result-label {
-            color: #666;
+            font-weight: bold;
+            color: #333;
         }
         .result-value {
             color: #1a237e;
+        }
+        .total-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #1a237e;
+        }
+        .total-item {
+            font-size: 18px;
+            color: #1a237e;
             font-weight: bold;
+        }
+        .notes-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+        }
+        .notes-title {
+            color: #1a237e;
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .notes-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            margin-bottom: 15px;
         }
         .action-buttons {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
             margin-top: 30px;
         }
         .btn {
@@ -56,11 +81,15 @@
             font-size: 16px;
             transition: background-color 0.3s;
         }
-        .print-btn {
-            background-color: #1a237e;
+        .save-btn {
+            background-color: #4CAF50;
             color: white;
         }
         .back-btn {
+            background-color: #1a237e;
+            color: white;
+        }
+        .home-btn {
             background-color: #666;
             color: white;
         }
@@ -68,12 +97,9 @@
             opacity: 0.9;
         }
         @media print {
+            .notes-section,
             .action-buttons {
                 display: none;
-            }
-            .result-card {
-                box-shadow: none;
-                border: 1px solid #ddd;
             }
         }
     </style>
@@ -84,110 +110,143 @@
     </div>
 
     <div class="results-container">
-        <div class="result-card">
-            <div class="result-title">פירוט חישוב המיסים</div>
-            
-            <div class="result-item">
-                <span class="result-label">ערך לצרכי מכס:</span>
-                <span class="result-value" id="customs-value">₪0</span>
+        <div class="results-title">פירוט חישוב המיסים</div>
+
+        <div class="result-item">
+            <span class="result-label">ערך לצרכי מכס:</span>
+            <span class="result-value" id="customs-value"></span>
+        </div>
+
+        <div class="result-item">
+            <span class="result-label">סך המכס:</span>
+            <span class="result-value" id="customs-duty"></span>
+        </div>
+
+        <div class="result-item">
+            <span class="result-label">שיעור המכס:</span>
+            <span class="result-value" id="customs-duty-rate">7%</span>
+        </div>
+
+        <div class="result-item">
+            <span class="result-label">ערך מס קנייה:</span>
+            <span class="result-value" id="purchase-tax"></span>
+        </div>
+
+        <div class="result-item">
+            <span class="result-label">ערך מס יוקרה:</span>
+            <span class="result-value" id="luxury-tax"></span>
+        </div>
+
+        <div class="result-item">
+            <span class="result-label">שיעור מס קנייה:</span>
+            <span class="result-value" id="purchase-tax-rate"></span>
+        </div>
+
+        <div class="result-item">
+            <span class="result-label">ערך מע"מ:</span>
+            <span class="result-value" id="vat"></span>
+        </div>
+
+        <div class="result-item">
+            <span class="result-label">שיעור מע"מ:</span>
+            <span class="result-value">18%</span>
+        </div>
+
+        <div class="total-section">
+            <div class="result-item total-item">
+                <span class="result-label">סך כל המיסים:</span>
+                <span class="result-value" id="total-taxes"></span>
             </div>
 
-            <div class="result-item">
-                <span class="result-label">מכס (7%):</span>
-                <span class="result-value" id="customs-duty">₪0</span>
+            <div class="result-item total-item">
+                <span class="result-label">שיעור כולל של המיסים:</span>
+                <span class="result-value" id="total-tax-rate"></span>
             </div>
 
-            <div class="result-item">
-                <span class="result-label">מס קנייה:</span>
-                <span class="result-value" id="purchase-tax">₪0</span>
-            </div>
-
-            <div class="result-item">
-                <span class="result-label">שיעור מס קנייה נומינלי:</span>
-                <span class="result-value" id="purchase-tax-rate">0%</span>
-            </div>
-
-            <div id="luxury-tax-container" style="display: none;">
-                <div class="result-item">
-                    <span class="result-label">מס יוקרה:</span>
-                    <span class="result-value" id="luxury-tax-amount">₪0</span>
-                </div>
-
-                <div class="result-item">
-                    <span class="result-label">שיעור מס יוקרה:</span>
-                    <span class="result-value" id="luxury-tax-rate">0%</span>
-                </div>
-            </div>
-
-            <div class="result-item">
-                <span class="result-label">מע"מ (18%):</span>
-                <span class="result-value" id="vat">₪0</span>
-            </div>
-
-            <div class="result-item">
-                <span class="result-label">סך המיסים:</span>
-                <span class="result-value" id="total-taxes">₪0</span>
-            </div>
-
-            <div class="result-item">
-                <span class="result-label">שיעור המיסים הנומינלי:</span>
-                <span class="result-value" id="total-tax-rate">0%</span>
-            </div>
-
-            <div class="result-item">
+            <div class="result-item total-item">
                 <span class="result-label">ערך הרכב כולל מיסים:</span>
-                <span class="result-value" id="total-value">₪0</span>
+                <span class="result-value" id="total-value"></span>
             </div>
         </div>
 
+        <div class="notes-section">
+            <div class="notes-title">הערות</div>
+            <textarea id="calculation-notes" class="notes-textarea" placeholder="הוסף הערות לחישוב זה..."></textarea>
+        </div>
+
         <div class="action-buttons">
-            <button class="btn print-btn" onclick="window.print()">הדפס תוצאות</button>
+            <button class="btn save-btn" onclick="saveCalculation()">שמור חישוב</button>
             <button class="btn back-btn" onclick="window.location.href='calculator.html'">חזרה למחשבון</button>
+            <button class="btn home-btn" onclick="window.location.href='calculator-type.html'">חזרה לדף הראשי</button>
         </div>
     </div>
 
     <script>
-        // קבלת הנתונים מהדף הקודם
-        function getQueryParams() {
+        document.addEventListener('DOMContentLoaded', function() {
             const params = new URLSearchParams(window.location.search);
-            return {
-                customsValue: parseFloat(params.get('customsValue')) || 0,
-                customsDuty: parseFloat(params.get('customsDuty')) || 0,
-                purchaseTax: parseFloat(params.get('purchaseTax')) || 0,
-                purchaseTaxRate: parseFloat(params.get('purchaseTaxRate')) || 0,
-                vat: parseFloat(params.get('vat')) || 0,
-                totalTaxes: parseFloat(params.get('totalTaxes')) || 0,
-                totalTaxRate: parseFloat(params.get('totalTaxRate')) || 0,
-                totalValue: parseFloat(params.get('totalValue')) || 0
+            
+            // הצגת הערכים
+            document.getElementById('customs-value').textContent = 
+                `₪${parseFloat(params.get('customsValue')).toLocaleString()}`;
+            
+            document.getElementById('customs-duty').textContent = 
+                `₪${parseFloat(params.get('customsDuty')).toLocaleString()}`;
+            
+            document.getElementById('purchase-tax').textContent = 
+                `₪${parseFloat(params.get('purchaseTax')).toLocaleString()}`;
+            
+            document.getElementById('luxury-tax').textContent = 
+                `₪${parseFloat(params.get('luxuryTaxAmount')).toLocaleString()}`;
+            
+            document.getElementById('purchase-tax-rate').textContent = 
+                `${parseFloat(params.get('purchaseTaxRate')).toFixed(2)}%`;
+            
+            document.getElementById('vat').textContent = 
+                `₪${parseFloat(params.get('vat')).toLocaleString()}`;
+            
+            document.getElementById('total-taxes').textContent = 
+                `₪${parseFloat(params.get('totalTaxes')).toLocaleString()}`;
+            
+            document.getElementById('total-tax-rate').textContent = 
+                `${parseFloat(params.get('totalTaxRate')).toFixed(2)}%`;
+            
+            document.getElementById('total-value').textContent = 
+                `₪${parseFloat(params.get('totalValue')).toLocaleString()}`;
+        });
+
+        // פונקציה לשמירת החישוב
+        function saveCalculation() {
+            const params = new URLSearchParams(window.location.search);
+            const notes = document.getElementById('calculation-notes').value;
+            const date = new Date().toLocaleString('he-IL');
+            
+            const calculation = {
+                date: date,
+                results: {
+                    customsValue: parseFloat(params.get('customsValue')),
+                    customsDuty: parseFloat(params.get('customsDuty')),
+                    purchaseTax: parseFloat(params.get('purchaseTax')),
+                    purchaseTaxRate: parseFloat(params.get('purchaseTaxRate')),
+                    luxuryTaxAmount: parseFloat(params.get('luxuryTaxAmount')),
+                    vat: parseFloat(params.get('vat')),
+                    totalTaxes: parseFloat(params.get('totalTaxes')),
+                    totalTaxRate: parseFloat(params.get('totalTaxRate')),
+                    totalValue: parseFloat(params.get('totalValue'))
+                },
+                notes: notes
             };
-        }
 
-        // הצגת התוצאות
-        function displayResults() {
-            const results = getQueryParams();
+            // קבלת היסטוריית החישובים הקיימת
+            let calculations = JSON.parse(localStorage.getItem('calculationHistory') || '[]');
             
-            document.getElementById('customs-value').textContent = `₪${results.customsValue.toLocaleString()}`;
-            document.getElementById('customs-duty').textContent = `₪${results.customsDuty.toLocaleString()}`;
-            document.getElementById('purchase-tax').textContent = `₪${results.purchaseTax.toLocaleString()}`;
-            document.getElementById('purchase-tax-rate').textContent = `${results.purchaseTaxRate.toFixed(2)}%`;
+            // הוספת החישוב החדש
+            calculations.push(calculation);
             
-            // הצגת מס יוקרה אם קיים
-            if (results.luxuryTaxAmount > 0) {
-                document.getElementById('luxury-tax-container').style.display = 'block';
-                document.getElementById('luxury-tax-amount').textContent = `₪${results.luxuryTaxAmount.toLocaleString()}`;
-                document.getElementById('luxury-tax-rate').textContent = `${results.luxuryTaxRate.toFixed(2)}%`;
-            } else {
-                document.getElementById('luxury-tax-container').style.display = 'none';
-            }
+            // שמירת ההיסטוריה המעודכנת
+            localStorage.setItem('calculationHistory', JSON.stringify(calculations));
             
-            document.getElementById('vat').textContent = `₪${results.vat.toLocaleString()}`;
-            document.getElementById('total-taxes').textContent = `₪${results.totalTaxes.toLocaleString()}`;
-            document.getElementById('total-tax-rate').textContent = `${results.totalTaxRate.toFixed(2)}%`;
-            document.getElementById('total-value').textContent = `₪${results.totalValue.toLocaleString()}`;
+            alert('החישוב נשמר בהצלחה!');
         }
-
-        // הרצת הפונקציה בעת טעינת הדף
-        window.onload = displayResults;
     </script>
 </body>
 </html> 
